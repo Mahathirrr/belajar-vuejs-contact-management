@@ -17,6 +17,18 @@ import AddressEdit from "./components/Address/AddressEdit.vue";
 const router = createRouter({
   routes: [
     {
+      path: "/",
+      redirect: () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          return "/dashboard/contacts";
+        } else {
+          return "/login";
+        }
+      },
+    },
+    {
+      path: "/layout",
       component: Layout,
       children: [
         {
