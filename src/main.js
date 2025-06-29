@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import "./style.css";
 import App from "./App.vue";
 import UserRegister from "./components/User/UserRegister.vue";
 import { createRouter, createWebHistory } from "vue-router";
