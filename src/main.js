@@ -32,6 +32,13 @@ const router = createRouter({
     {
       path: "/dashboard",
       component: DasboardLayout,
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.getItem("token")) {
+          next("/login");
+        } else {
+          next();
+        }
+      },
       children: [
         {
           path: "contacts",

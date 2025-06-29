@@ -1,12 +1,16 @@
 <script setup>
 import { onBeforeMount, ref } from "vue";
-import { userDetails, userUpdatePassword, userUpdateProfile } from "../../../lib/api/userApi";
+import {
+  userDetails,
+  userUpdatePassword,
+  userUpdateProfile,
+} from "../../../lib/api/userApi2";
 import { useLocalStorage } from "@vueuse/core";
 import { alertError, alertSuccess } from "../../../lib/alert";
 const name = ref("");
 const password = ref("");
 const confirm_password = ref("");
-const token = useLocalStorage("token", "")
+const token = useLocalStorage("token", "");
 
 async function handleChangeName() {
   const response = await userUpdateProfile(token.value, { name: name.value });
@@ -23,7 +27,9 @@ async function handleChangePassword() {
     await alertError("Password do not match");
     return;
   }
-  const response = await userUpdatePassword(token.value, { password: password.value });
+  const response = await userUpdatePassword(token.value, {
+    password: password.value,
+  });
   const responseBody = await response.json();
   if (response.status === 200) {
     password.value = "";
@@ -42,8 +48,7 @@ onBeforeMount(async () => {
   } else {
     await alertError(responseBody.errors);
   }
-})
-
+});
 </script>
 
 <template>
@@ -72,7 +77,7 @@ onBeforeMount(async () => {
               </div>
               <input type="text" id="name" name="name"
                 class="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="Enter your full name" value="John Doe" required v-model="name">
+                placeholder="Enter your full name" value="John Doe" required v-model="name" />
             </div>
           </div>
 
@@ -105,7 +110,7 @@ onBeforeMount(async () => {
               </div>
               <input type="password" id="new_password" name="new_password"
                 class="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="Enter your new password" required v-model="password">
+                placeholder="Enter your new password" required v-model="password" />
             </div>
           </div>
 
@@ -118,7 +123,7 @@ onBeforeMount(async () => {
               </div>
               <input type="password" id="confirm_password" name="confirm_password"
                 class="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                placeholder="Confirm your new password" required v-model="confirm_password">
+                placeholder="Confirm your new password" required v-model="confirm_password" />
             </div>
           </div>
 

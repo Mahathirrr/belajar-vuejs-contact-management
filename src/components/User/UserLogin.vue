@@ -1,29 +1,34 @@
 <script setup>
 import { reactive } from "vue";
-import { userLogin } from "../../../lib/api/userApi";
-import { alertError } from "../../../lib/alert";
+import { userLogin } from "../../../lib/api/userApi2";
+import { alertError, alertSuccess } from "../../../lib/alert";
 import { useRouter } from "vue-router";
 import { useLocalStorage } from "@vueuse/core";
 const user = reactive({
   username: "",
-  password: ""
-})
+  password: "",
+});
 const token = useLocalStorage("token", "");
 
 const router = useRouter();
 
 async function handleSubmit() {
-  const response = await userLogin(user);
-  const responseBody = await response.json();
-  console.log(responseBody);
-  if (response.status === 200) {
-    token.value = responseBody.data.token;
-    router.push("/dashboard/contacts")
-  } else {
-    await alertError(responseBody.errors)
+  try {
+    const response = await userLogin(user);
+
+    if (response.status === 200) {
+      token.value = response.data.data.token;
+      router.push({
+        path: "/dashboard/contacts",
+      });
+    } else {
+      await alertError(response.errors);
+    }
+  } catch (e) {
+    console.error("Something went wrong: ", e);
+    alertError("Error handle submit");
   }
 }
-
 </script>
 
 <template>
@@ -46,7 +51,7 @@ async function handleSubmit() {
           </div>
           <input type="text" id="username" name="username"
             class="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            placeholder="Enter your username" required v-model="user.username">
+            placeholder="Enter your username" required v-model="user.username" />
         </div>
       </div>
 
@@ -58,7 +63,7 @@ async function handleSubmit() {
           </div>
           <input type="password" id="password" name="password"
             class="w-full pl-10 pr-3 py-3 bg-gray-700 bg-opacity-50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            placeholder="Enter your password" required v-model="user.password">
+            placeholder="Enter your password" required v-model="user.password" />
         </div>
       </div>
 
